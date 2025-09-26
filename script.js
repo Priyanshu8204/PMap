@@ -96,10 +96,16 @@ class App {
     if (navigator.geolocation)
       navigator.geolocation.getCurrentPosition(
         this._loadMap.bind(this),
-        function () {
-          alert('Clould not get your position');
-        }
+        this._showGeolocationError.bind(this)
       );
+    else {
+      this._showGeolocationError();
+    }
+  }
+
+  _showGeolocationError() {
+    const containerWorkouts = document.querySelector('.workouts');
+    containerWorkouts.innerHTML = '<li style="color: #ff0000; font-size: 1.6rem; padding: 2rem; text-align: center;">Unable to access your location.<br>Please enable location services in your browser and reload the page.</li>';
   }
 
   _loadMap(position) {
@@ -113,7 +119,7 @@ class App {
     this.#map = L.map('map').setView(coords, this.#mapZoomLevel);
     //   console.log(map);
 
-    L.tileLayer('https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(this.#map);
